@@ -1,0 +1,85 @@
+Reliable Service
+TCP - Transmission Control Protocol
+Connection-oriented
+- Handshaking: send connection messages for data transfer ahead of time
+- Set up state in two communicating hosts
+
+TCP
+Reliabe, in-order byte-stream data transfer
+- Packet loss handled through acknowledgements and retransmissions
+Flow Control
+- Sender won't overwhelm receiver
+Congestion Control
+- Senders reduce transmission rate when network becomes congested
+
+UDP - User Datagram Protocol
+- Connectionless
+- Unreliable data transfer
+- No flow control
+- No congestion control
+Less overhead and delay
+
+Apps using TCP
+HTTP, FTP, SSH, SMTP
+
+Apps using UDP
+DNS, SNMP
+- Short transfers
+- No need for congestion management
+Streaming Media, Online Games, IP telephony
+- More sensitive to delay than packet loss
+
+Network Core
+Supports end-host communication
+How is data transferred through the nework?
+- Circuit switching: dedicated circuit per call (telephone network, origin 1800s)
+- Packet switching: data sent in discrete "chunks" (1960s)
+
+Notation
+- Call = connection = flow
+
+Packet Switching
+End-end data stream divided into packets
+- Packets of users A and B share network resources
+- Each packet uses full link bandwidth
+Resource contention
+- Aggregate resource demand can exceed amount available
+- Congestion: packets queue, wait for link use
+Store-and-forward
+- Packets move one hop (router) at a time
+- Node receives complete packet before forwarding
+
+Statistical Multiplexing
+Randomly intermingle packets (order they arrive), No fixed pattern
+
+Packet Switching vs Ciruit Switching
+Packet switching allows more users than circuit switching
+1 mbps link
+Each user:
+- 1000 kbps when "active"
+- Active 10% of time
+Circuit switching:
+- Supports 10 users
+Packet switching:
+- Binomial Distribution
+  - With 35 users, probability that more than 10 users are active is 0.0424%
+  - With 50 users, probability that more than 10 users are active is 0.94%
+- Max 100 users (if perfectly interleaved)
+
+Packet Switching: Store-and-forward
+Takes L/R sesconds to transmit (push out) packet of L bits on to link of R bps
+Entire packet must arrive at router before it can be transmitted on next link: store and forward
+Path delay = 3L/R
+
+Mult-Threading
+Threads execute concurrently as part of a process
+Benefits
+- Allows for parallelism in a multiprocessor/multicore system
+- If a blocking call is made in one thread, other threads can continue executing
+
+Mutex Usage
+Critical Section
+
+Events
+CreateEvent, WaitForSingleObject, CloseHandle
+
