@@ -1,3 +1,44 @@
+The Internet: "Nuts and Bolts" View
+Hosts(end systems)
+- Computing devices (servers, desktops, phones, laptops, etc.)
+Routers
+- Forward packets (chunks of data) to destinations
+Communication links
+- Connect hosts & routers
+- Fiber, copper, radio, satellite
+- Transmission rate = bandwidth
+Protocols
+- Control sending/receiving of messages (e.g., TCP, IP, HTTP, FTP, SMTP)
+Internet Standards
+- IETF: Internet Engineering Task Force
+- RFC: Request for comments
+
+What's a Protocol?
+Defined format and order of messages setn and received among network entities,
+and actions taken on message transmission/receipt
+
+Network Structure
+Network edge:
+- Applicationd and hosts
+Network core:
+- Routers
+- Links
+How large is the edge?
+- Billions of hosts, trillions of web pages, zettabytes of information
+Large ISPs form the Internet backbone
+- Terabits per second router speed
+
+Network Edge
+The edge:
+- Responsible for almost all data supply/demand
+- Protocols impact performance
+Client/server model
+- Client host requests, receives service from always-on server
+- Example: web browser/server; email client/server;
+Peer-to-peer (P2P) model:
+- Minimal use of dedicated servers; user hosts talk to each other
+- Example: BitTorrent
+
 Reliable Service
 TCP - Transmission Control Protocol
 Connection-oriented
@@ -18,6 +59,10 @@ UDP - User Datagram Protocol
 - No flow control
 - No congestion control
 Less overhead and delay
+━ TCP connection setup &
+termination is 7 packets
+━ TCP retransmission delay is
+potentially unbounded
 
 Apps using TCP
 HTTP, FTP, SSH, SMTP
@@ -52,11 +97,11 @@ Store-and-forward
 Statistical Multiplexing
 Randomly intermingle packets (order they arrive), No fixed pattern
 
-Packet Switching vs Ciruit Switching
+Packet Switching vs Circuit Switching
 Packet switching allows more users than circuit switching
 1 mbps link
 Each user:
-- 1000 kbps when "active"
+- 100 kbps when "active"
 - Active 10% of time
 Circuit switching:
 - Supports 10 users
@@ -67,18 +112,27 @@ Packet switching:
 - Max 100 users (if perfectly interleaved)
 
 Packet Switching: Store-and-forward
-Takes L/R sesconds to transmit (push out) packet of L bits on to link of R bps
+Takes L/R seconds to transmit (push out) packet of L bits on to link of R bps
 Entire packet must arrive at router before it can be transmitted on next link: store and forward
 Path delay = 3L/R
+Example:
+L = 7.5 Mbits
+R = 1.5 Mbps
+End-to-end delay = 15 sec
 
 Mult-Threading
 Threads execute concurrently as part of a process
 Benefits
 - Allows for parallelism in a multiprocessor/multicore system
 - If a blocking call is made in one thread, other threads can continue executing
+Issues
+- Memory is shared between threads, concurrent access requires proper synchronization
+- Order of execution of threads in non-deterministic
+
 
 Mutex Usage
-Critical Section
+Any data structure or resource modified by parallel threads needs to be protected
+For windows user Critical Section
 
 Events
 CreateEvent, WaitForSingleObject, CloseHandle
