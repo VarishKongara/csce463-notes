@@ -1,0 +1,105 @@
+Internet: Network of Networks
+Roughly hierarchical
+- In the center: "tier-1" ISPs (e.g., Sprint, AT&T, Verizon), national/international coverage
+
+Tier 1 providers may interconnect at public network acces points (NAPs)
+Tier 1 providers interconnect (peer) privately
+They treat each other as equals
+
+Tier 2 ISPs: smaller (often regional) ISPs
+- Connect to one or more tier-1 ISPs, possibly other tier-2 ISPs
+Tier 2 ISP pays Tier 1 ISP for connectivity to rest of Internet
+Tier 2 ISP is customer of Tier 2 provider
+Tier 2 ISPs also peer privately with each other, or interconnect at NAPs
+
+Tier 3 ISPs and local ISPs
+Customers of higher connecting ISPs
+Last hop ("access") network (closest to end systems)
+
+Generally smaller ISPs can not connect to highest level ISP because the smaller traffic is not enough to support the high cost
+
+A packet will pass through many different ISPs
+
+Delay and Loss
+Packets queue in router buffers (typically FIFO queues)
+If packet arrival rate exceeds output link capacity:
+- Packets queue, wait for there turn
+- Packets dropped if not free buffers
+
+Four Sources of Packet Delay
+1. Router processing delay:
+- Check bit errors
+- Determine output link
+- Place packet in buffer
+
+3. Transmission Delay
+R = Link rate (bps)
+L = Packet Length (bits)
+Time to send bits into Link = L/R
+
+4. Propagation delay
+d = length of link (m)
+s = propagation speed  in medium (2x10^8 m/sec)
+propagation delay = d/s
+
+A packet can never be at 3 routers simultaneously
+Store and Forward - a packet must fully arrive then send to next
+This means can be at only 2 routers simultaneously
+
+dnodal = dproc + dqueue + dtrans + dprop
+dproc = processing delay
+dqueue = queuing delay
+dtrans = transmission delay
+dprop = propagation delay
+
+Queueing delay
+R = link bandwidth (bps)
+L = packet length (bits)
+a = average packet
+arrival rate (pkts/sec)
+Traffic Intensify p = La/r
+
+p approximately 0: average queueing delay is small
+p >= 1: more "work" arriving than can be handled
+
+"Real" Internel Delays and Routes
+Traceroute (tracecert in Windows):
+Provides delay measurements from source to all routers along internet paths towards a destination
+For all i:
+- Sends three packet that reach router i
+
+Packet Loss
+Queues have finite capacity
+When packets arrive to a full buffer, they are dropped (aka lost) - drop-tail queueing
+Lost packet may be retransmitted by previous router, by the source (end system), or not at all
+Loss rate: average fraction of data lost over a long period of time (measured in percent)
+
+Protocol "Layers"
+Networks are complex!
+Many "pieces"
+- Hosts
+- Routers
+- Links of various media
+- Applications
+- Protocols
+Some type of modular organzation is desirable
+
+Layered Structure
+Same host: each layer interacts only with adjacent layers
+Remote host:
+
+Information travels down the protocol stack on the sender side and up on the receiver side
+
+Why layering?
+Benefits of layered organization:
+Sufficient to specify only the relationship between the system's pieces
+Modularizatio neases maintenance and upgrade
+
+Internet Protocol Stack
+Application
+Transport
+Network
+Link
+Physical
+
+
