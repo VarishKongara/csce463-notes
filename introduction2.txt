@@ -1,6 +1,7 @@
 Internet: Network of Networks
 Roughly hierarchical
 - In the center: "tier-1" ISPs (e.g., Sprint, AT&T, Verizon), national/international coverage
+- Treat each other as equals, do not pay for upstream bandwidth
 
 Tier 1 providers may interconnect at public network acces points (NAPs)
 Tier 1 providers interconnect (peer) privately
@@ -32,6 +33,10 @@ Four Sources of Packet Delay
 - Determine output link
 - Place packet in buffer
 
+2. Queueing delay
+- Time waiting at output link for transmission
+- Depends on congestion level of router
+
 3. Transmission Delay
 R = Link rate (bps)
 L = Packet Length (bits)
@@ -39,7 +44,7 @@ Time to send bits into Link = L/R
 
 4. Propagation delay
 d = length of link (m)
-s = propagation speed  in medium (2x10^8 m/sec)
+s = propagation speed in medium (approximately 2x10^8 m/sec)
 propagation delay = d/s
 
 A packet can never be at 3 routers simultaneously
@@ -60,13 +65,16 @@ arrival rate (pkts/sec)
 Traffic Intensify p = La/r
 
 p approximately 0: average queueing delay is small
-p >= 1: more "work" arriving than can be handled
+p approaching 1: delay quickly shoots up
+p >= 1: more "work" arriving than can be serviced, average delay is infinite
 
 "Real" Internel Delays and Routes
 Traceroute (tracecert in Windows):
 Provides delay measurements from source to all routers along internet paths towards a destination
 For all i:
-- Sends three packet that reach router i
+- Sends three packet that reach router i on path towards destination
+- Router i returns a response to sender
+- Sender times interval between transmission and reply
 
 Packet Loss
 Queues have finite capacity
@@ -86,20 +94,31 @@ Some type of modular organzation is desirable
 
 Layered Structure
 Same host: each layer interacts only with adjacent layers
-Remote host:
+Remote host: each layer talks to indetical layer on the other end-host
 
 Information travels down the protocol stack on the sender side and up on the receiver side
+
+Layers: each layer implements a service
+- Via its own internal-layer actions
+- Relying on services provided by the layer below
+- Talks to same layer on the other host
 
 Why layering?
 Benefits of layered organization:
 Sufficient to specify only the relationship between the system's pieces
-Modularizatio neases maintenance and upgrade
+- Instead of defining one big protocol that does everything
+- Complexity reduced by separately standardizing individual components
+Modularization eases maintenance and upgrade
+- Change of implementation of layer's service transparent to the rest of system
 
 Internet Protocol Stack
-Application
-Transport
-Network
-Link
-Physical
-
+Application: interacts with user and supports network applications
+- FTP, SMTP, HTTP
+Transport: inter-process data transfer
+- TCP, UDP
+Network: routing of datagrams from source to destination host
+- IP, routing protocols
+Link: data trabsfer between neighboring network elements
+- Ethernet
+Physical: bits "on the wire"
 
