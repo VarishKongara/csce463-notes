@@ -1,0 +1,174 @@
+Cookies
+User visits same website
+Website remembers infor
+Cookie header line in http response messafe
+Cookie file to stor the cookies
+
+Cookies: Keeping State
+Client makes http request with no cookies
+Server creates cookies for the new user, and stores in database
+Server returns http resonse with cookie, and client will store cookie
+Client makes next http request with the cookie
+Server will look at the cookie and take action based on the cookie
+A week later,
+Client makes http request with cookie
+Server makes response based on cookie
+
+Cookie Example
+Set-Cookie : Key=Value; path=/
+The path prefix tells where the cookie is valid
+Cache-control: private 
+Private tells that shared caching is not allwed
+
+Cookie file location is browser-dependent
+- Impersonation is possible by copying or intercepting user cookies (thorugh sniffing and malicious scripting)
+Other privacy issues
+- Websites accumulate data about users (form input, actions), share this information with others
+- So-called third-party (tracking) cookies
+Incognito broswing mode starts with no cookies
+- New cookies are accepted and kept until broser is closed
+
+Web Caches (Proxy Server)
+Goal: Satisfy client request without involving origin server
+Browser explicitly sends requests via cache or cache intercepts all outgoing http traffic.
+- Tries to fulfill requests without contacting server to reduce bandwidth usage
+Cache acts as both client and server
+Typically cache is installed by your ISP, university, or company at some network border
+- Reduce response time for client request
+- Reduce traffic on the address link
+- Reduce load on the servers and allow them to scale to a larger number of users
+- Increase security - cached pages can be scanned for viruses before user download is allowed
+- Filter URLs to prevent undesirable destinations
+
+Caching Example
+Assumptions
+- Average object size = 100,000 bits
+- Average request rate from institution's browsers to origin 15K/sec
+- Delay from ISP router to any origin server and back to router = 2 sec
+Consequences
+- Utilization of LAN = 15%
+- Utilization on access link = 100%
+- Total delay = Internet delay + access delay + LAN delay
+= 2 sec + acccess queuing delay + milliseconds
+Possible Solution
+- Increase bandwidth of acccess link to, say, 10 Gbps
+Consequences
+- Utilization on LAN = 15%
+- Utilization on access link = 15%
+- One time upgrade cost
+- Consistent increased cost for more bandwidth
+Possible Solution
+- Install Cache, suppose hit rate is 40%
+Consequences
+- 40% of requests will be satisfied almost immediately
+- 60% of requests to origin server
+- Utilization of access link to 60%, lower queuing delay
+- Total average delay = internet delay + access delay + LAN delay = 0.6*2.0 secs + milliseconds = 1.2 secs
+
+Conditional GET
+Goal: don't send object if cache has up-to-date cached version
+- Client: specify date of cached copy in HTTP request
+- Server: response contains no object if cached copy is up to date
+Client - If-modified-since: <date>
+Server: 304 Not Modified, or 200 OK <data>
+Expires field in header
+- Server may provide date when content expires
+- Expires: Sat, 01 Oct 2024 16:00:00 GMT
+- May not be used because it is hard to predict updates
+
+FTP: The File Transfer Protocol
+Transfer file to/from remote host
+Client/server model
+- client: initiates the transfer (either to/from remote)
+- server: accepts connection on remote host
+- FTP: RFC 959 (1985)
+- FTP: Port 21
+
+FTP: Separate Control, Data Connections
+FTP client contacts server on port 21 to open control connection
+- obtains authorizatio nover this channel
+- sends commands for file transfer and/or directory listing
+Active mode (default):
+server opens data connection to the client
+- One for each command
+Passive mode:
+- Data connection opened by client
+- Useful when client is behind a firewall
+After transferring object, sender closes data connection
+
+Sample Commands:
+ASCII
+- USER username
+- PASS password
+- PORT or PASV
+- LIST list of files in current directory
+- RETR filename
+- STOR filename
+
+Connection Management
+Active Mode (PORT)
+- PORT tells the server to which <IP, port> to issue a connect
+- Third party IP is OK in theory, DDoS possibility
+Passive Mode(PASV)
+- PASV forces the server to open a new socket to which the client can connect
+- Can tell the client to connect to a Third party IP, DDoS possibility
+
+FTP Example
+Commands do not work until user is authorized
+Once logged in returns port
+PORT 128,194,135,66,10,5
+IP 128.194.135.66
+PORT 10*256 + 5 = 2565
+
+Electronic Mail
+- User Agents
+- Mail Servers
+- SMTP
+
+User Agent (UA)
+Mail reader - composing, editing, reading main
+
+Mail Servers
+Message Queue of outgoind (to be sent) mail messages
+Mailbox contains incoming messages for user
+
+SMTP protocol
+Used by mail servers to communicate messages
+
+Example
+1) Sender uses user agent to compose message
+2) user agent sends message to mail server
+3) message accepted and placed in outgoing queue
+4) SMTP client sends message to receiver's server
+5) receiver's mail server places message in receiver's mailbox
+6) receiver invokes his user agent to read message
+
+Electronic Mail: SMTP [RFC 821, 974, 1869, 2821]
+Port 25
+
+SMTP: Final Words
+SMTP uses non-pipelined persistent connections
+SMTP requires messages in 7-bit ASCII codes (<128)
+SMTP server uses \r\n.\r\n to determine the end of message
+- Solution: UA inserts a dot in front of all lines already starting with a dot
+
+Comparison with HTTP:
+HTTP: pull, SMTP: push
+Both use ASCII command/response interaction, status codes
+HTTP: each object encapsulated in its own request/response msg
+SMTP: multiple objects all put into one message
+
+Mail Access Protocol
+- POP3: Post Office Protocol v3: Port 110
+- IMAP: Internet Mail Access Protocol: Port 143
+- HTTP: Hotmail, Yahoo!, Gmail
+
+POP3 Protocol
+Server Responses
+- +OK
+- -ERR
+Authorization phase
+- Client commands
+  - user
+  - pass
+Transaction Phase, client

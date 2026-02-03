@@ -1,0 +1,167 @@
+Quiz
+Based on questions 5-33 at the end of chapter 1
+System Notes
+
+Some issues that could happen in recv loop
+- inefficient recv
+- buffer overflow when page exceeds 10 MB
+- Deadlock on errors
+- Probably stack overflow if buf declared in a function
+
+Robots.txt
+Websites are crawled by many automated programs
+- This potentially consumes large volumes of traffic
+Besides bandwidth, concerns arise about protected human-only portions of websites
+- Shopping carts, registration pages, pasting into forums
+Webmasters need a mechanism to indicate prohibited request prefixes within their sites
+- Given in /robots.txt
+Example:
+User-agent: *
+Disallow: /search
+Disallow: /sdch
+Disallow: /groups
+Disallow: /catalogs
+Allow: /catalogs/about
+Allow: /catalogs/p?
+Disallow: /catalogues
+
+Directives are parsed in order, until first match
+- Algorithm has become ambigouos in recent years: Google crawler use the longest-prefix match
+
+Robots.txt 2
+Despite being around since 1994, robos.txt is not a standard, but rather a suggestion on politeness
+- See https://robotstxt.org
+Even less official extensions to robots.txt
+- Crawl-delay specifies the # of seconds between visits
+- Sitemap points to an XML file that lists all available documents
+- Wildcards in directory paths (* and $ = ends width)
+  - $ is good for matching file extensions
+
+No specific amount of days to reload robots.txt
+- Original spec does not say how many days; Google uses 1 day by default and changes over time if you update it less
+
+Application Layer
+Some Network Applications:
+- E-mail
+- Remote login
+- Web
+- Instant messaging
+- P2P file sharing
+- etc.
+
+Application Layer Programs
+- Usually interact with user
+- Communicate over a network
+- E.g., web server software communicates with browser software
+No software written for devices in network core
+- Network core devices do not function at app layer
+- This design allows for rapid application development
+
+Communication Prrinciples
+Three architectures
+- Client-server
+- Peer-to-peer (P2P)
+- Hybrid
+
+Client-Server
+Server:
+- An always on host
+- Permanent IP address of hostname
+- Server farms for scaling
+Clients:
+- May be intermittently connected
+- May have dynamic IP addresses and hostnames
+- Do not communicate directly with each other, only talk to servers
+
+P2P Architecture
+- No always-on server
+- Arbitrary end systems directly communicate
+- Peers are intermittently connected and change IP addresses/hostname
+Example: Gnutells
+- Distributed graph between users over TCP connections
+Highly scalable: assume 6M users, each with 10GB of shared data and 10 Mbps upstream bandwidth
+- 60 PB of storage, 120 Tbps bandwidth for free
+Downside - difficult to provide reliable service
+
+Hybrid Architecture
+Example: Napster (1999)
+File transfer P2P, but search is centralized
+- Peers register content at central server
+- Peers query same central server to locate content
+Example: Instant Messaging
+Login and chatrooms are centralized
+- Private communication is peer to peer
+
+Process Communication
+Process: program running within a host
+Within same host, two processes communicate unsing inter-process communication (semaphore, mutex, pipe, shared memory)
+Processes in different hosts communicate by exchanging messages
+Client : initiates communication
+Server: process waits to be contacted
+P2P: act as both client and server
+
+Web and HTTP
+Terminology
+Web page consists of a base HTML-file and possibly multiple external objects
+- Examples of objects: JPEG image, Java applet, audio file, video stream, or flash animation
+Each object is addressable by a URL with the HTTP scheme
+- Username and password not used anymore
+- Fragment tells browser where to jump
+
+HTTP Overview
+- 1.0: RFC 1945 (1996)
+- 1.1: RFC 2068 (1997), RFC 2616 (1999)
+- 2: RFC 7540 (2015), binary protocol over TCP
+- 3: RFC 9114 (2022), QUIC over UDP
+
+Nonpersistant HTTP
+- At most one object is sent over a TCP connection
+- HTTP/1.0 must use nonpersistant HTTP
+
+Persistent HTTP
+- Multiple objects sent over single TCP connection
+- HTTP/1.1 uses persistent connections by default
+- Field "Connection: close" overrides this behavior
+
+Response Time Modeling
+RTT (Round-Trip Time):
+- Delay for a small packet to travel from client to server and back
+Response time:
+- One RTT to initiate TCP connection
+- One RTT for HTTP request and first few bytes of HTTP response to return
+- File transmission time
+total = 2RTT + file load time
+
+Persistent HTTP
+Nonpersistant HTTP issues:
+- Requires to RTTs per object
+- Workaround: browsers open parallel TCP connections to fetch referenced objects
+- OS must work and allocate host resources for each TCP connection
+Persistent HTTP
+- Server leaver connection open after sending response
+- Subsequent HTTP messages between same client/server are sent over connection
+Persistent without pipelining
+- Client issues new request only when previous response hase been received
+- One RTT for each referenced onject + its transmission time
+Persistent with pipelining
+- Default in HTTP/1.1
+- Client sends requests as soon as it encounters a referenced object
+- One RTT for all referenced object + their transmission times
+
+HTTP/2 allows out-of-order replies, fragmentation of obects and prioritization
+
+HTTP Request Message
+Two types of HTTP Messages: request and response
+HTTP 1.0 and 1.1 use ASCII
+Request Line, Header Line, Carriage return + line feed indicates end of head
+
+Uploading Form Input
+Post Method:
+- Input is uploaded to server in entity body
+- Used for large amounts of data
+  - Data is coded using tuples "field=value", wher + stands for space and & for the field separator
+URL Method:
+- Uses the GET command
+- Input is encoded in the URL field of the request line
+  - Append ? to the script path, followed by the URL-coded data
+
