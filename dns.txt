@@ -133,3 +133,8 @@ First bit - 0 = query, 1 = response
 9 - Recursion Available
 10/11/12 - Reserved
 13/14/15/16 - 0 = success, 1 = format error, 2 = server error, 3 = no DNS name
+
+Using UDP
+DNS runs over UDP that has no connection phase
+- Each request and response is exactly 1 packet
+- Calls to recvfrom() and sendto() corresponse to 1 packet
