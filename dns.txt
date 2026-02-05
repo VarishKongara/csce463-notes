@@ -1,0 +1,135 @@
+DNS: Domain Name System
+Originally: hosts.txt, file with flat namespace with all known hosts
+Now: Distributed Database
+Application Layer Protocol
+- Name servers to resolve names/IPs
+- UDP port 53
+- Single Packet Query and Response
+
+Services
+- Forward Lookup
+  - Hostname to IP translation
+- Reverse Lookup
+  - IP to hostname
+- Host aliasing
+- Mail server lookup
+- Load distribution
+  - E.g., replicated web servers: set of IP addresses for one DNS name
+
+Why not Centralize DNS?
+- Single point of failure
+- Traffic Volume
+- Lack of geographic proximity to user, high latency
+- Inflexible
+
+Distributed, Hierarchical Database (Tree)
+Root DNS Servers
+- TLD DNS Servers - com, org, edu
+- - Company/Owner - yahoo.org, amazon.com, pbs.org, poly.edu
+
+Who to ask about the location of root servers?
+- Nobody, their IPs are hardwired into OS or DNS server
+
+Types of DNS Servers
+Root
+There are 13 named root servers (called A-M), each with a fixed IP address
+- Some servers (e.g., A, C, F, I) are geographically distributed
+- Anycast addressing, root servers can have same IP, ISP will choose one
+
+TLD
+generic TLDs(e.g., com, org, net)
+country-code TLDs(e.g., uk, fr, ca, jp)
+- Around 1600 total gTLDs and ccTLDs (2025)
+- Verisign runs .com, Educause .edu
+
+Authoritative servers:
+provide authoritative mappings for company servers (e.g., Web and mail)
+- Can be maintained by organization (e.g., amazon.com) or service provider (e.g., ISP or hosting company)
+Local name server: does not belong to the hierarchy
+- Any computer that accepts requests and then finds out the answer by traversing the DNS tree
+
+Local Name Servers
+Setting up DNS in Windows
+- Preferred DNS server in network
+- If you run BIND, set this to 127.0.0.1
+- Auto-configure via DHCP or set to 8.8.8.8 (Google DNS)
+When a host makes a DNS query (application calls gethostbyname), query is sent to local DNS server
+- Local server acts a proxy (cache) and forwards query into hierarchy if it cannot answer it from cache
+Command-line tool for DNS queries is nslookup
+- Homework #2 implements essentially this
+
+
+Iterative
+Service replies with name of the next server
+
+Recursive queries
+Puts burden of name resolution on contacted name server
+- Congests Root DNS
+- Hard to recover from failure
+- No caching
+Mostly just used for the local DNS
+
+DNS: Caching and Updating Records
+Once (any) name server learns a mapping, it caches the mapping
+- Cache entries time out (disappear) after some time (TTL)
+- Unexpired entries served directly from cache, in which cause they are called non-authoritative
+- If the DNS server of the target domain is contacted, the response is authoritative
+TLD servers are typically cached in local name server
+- Thus root name servers are not supposed to be visited often
+In 2007, load on individual servers A-M was 6-16k queries/sec
+- During DDos attacks in 2001 it was 38K/sec
+
+DNS records
+DNS: distributed database of resource records (RR)
+(name, value, type, ttl)
+- Type A (forward lookup)
+  - name = host
+  - value = IPv4 address (4 byte DWORD)
+- Type NS (Name Server)
+  - name = domain
+  - value = hostname of authoritative name server for this domain
+- Type CNAME (Canonical Name)
+  - name = host
+  - value = host it's aliased to
+  - Reduces manual effort to change IPs and other records
+- Type Mx (Mail Exchange)
+  - name = domain
+  - value = name of SMTP server associated with domain
+For IPv6 replace A with AAAA
+
+Reverse Queries
+Reverse DNS lookups are performed using a special construction of a fake DNS name
+- Reason: DNS resolves names fom right to left with the semantics of going from the most general to the most specific
+- In IPs, the MSB is most general, LSB is most specific
+The IP address is revered and is followed by "in-addr.arpa" (or "i6.arpa" for IPv6)
+- Example: 128.194.135.65 is 65.135.194.128.in-addr.arpa
+- The query type must be set to PTR
+RFC 1035 (1987) describes DNS headers/commands
+- Useful for hw2
+
+DNS Protocol, Messages
+Query and reply messages use same format
+- Packet starts with a fixed DNS header (12 bytes)
+- Followed by a variable-length section
+Transaction ID (TXID)
+- 16-bit number assigned by client to each query
+- Echoed by server in response packet
+
+Queries contain only the question section
+- servers usually expect one question per packet
+Response packets always repeat the question
+- Safety mechanism if TXID runs into collision at the client
+Authority section carries NS record(s)
+- Used during iterative lookups to specify the next DNS server to query (similar to HTTP redirects)
+All number are in network byte order
+- Use proper conversion (i.e, htons)
+
+DNS Flags
+First bit - 0 = query, 1 = response
+2/3/4/5 bit - 0 = standard query
+6 - Authoritative Answer
+7 - Truncated Response
+8 - Recursion Desired
+9 - Recursion Available
+10/11/12 - Reserved
+13/14/15/16 - 0 = success, 1 = format error, 2 = server error, 3 = no DNS name
